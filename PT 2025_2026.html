@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SENAC - Plano de Trabalho 2025-2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Corporate Blue/Teal -->
+    <!-- Application Structure Plan: A single-page dashboard application with top navigation to switch between four views: 'Dashboard 2025', 'Detalhes 2025', 'Linha do Tempo', and 'Planejamento 2026'. The dashboard provides a high-level summary. The 'Detalhes' view allows deep filtering. The 'Linha do Tempo' provides a chronological overview. 'Planejamento 2026' shows future plans. This structure supports multiple analysis angles: summary, detailed, chronological, and future-focused. -->
+    <!-- Visualization & Content Choices: 1. KPIs: Goal: Inform -> Dynamic Stats. 2. Overall Progress: Goal: Inform Proportion -> Doughnut Chart. 3. Activities per Segment: Goal: Compare -> Stacked Bar Chart. 4. Activity List: Goal: Organize/Explore -> Filterable Cards. 5. Timeline: Goal: See Change/Distribution -> Bubble Chart on Time Axis (Chart.js) -> Hover tooltip/Filters -> Shows activity distribution over time for strategic planning. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 500px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button.active {
+            background-color: #475569;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .filter-button.active {
+            background-color: #64748b;
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center">
+            <h1 class="text-2xl font-bold text-slate-700">Plano de Trabalho SENAC 2025-2026</h1>
+            <nav id="main-nav" class="mt-4 sm:mt-0 flex flex-wrap justify-center gap-2">
+                <button data-target="dashboard" class="nav-button active px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Dashboard 2025</button>
+                <button data-target="details" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Programações 2025</button>
+                <button data-target="timeline" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Linha do Tempo</button>
+                <button data-target="plan-2026" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Planejamento 2026</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="dashboard" class="page-content">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Dashboard de Desempenho 2025</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção apresenta uma visão geral e consolidada das principais métricas e do progresso das atividades planejadas para 2025. Utilize os gráficos interativos para comparar o desempenho entre os diferentes segmentos de atuação.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-lg font-semibold text-slate-600 mb-2">Cursos Premium</h3>
+                    <p class="text-4xl font-bold text-slate-700"><span id="cursos-realizados">0</span> / <span id="cursos-total">0</span></p>
+                    <p class="text-sm text-slate-500 mt-1">Realizados vs. Total Previsto</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 class="text-lg font-semibold text-slate-600 mb-2">Eventos</h3>
+                    <p class="text-4xl font-bold text-slate-700"><span id="eventos-realizados">0</span> / <span id="eventos-total">0</span></p>
+                    <p class="text-sm text-slate-500 mt-1">Realizados vs. Total Previsto</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-center mb-4">Progresso Geral 2025</h3>
+                    <div class="chart-container h-64 md:h-80 !max-w-xl">
+                        <canvas id="geralProgressChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-center mb-4">Atividades por Segmento</h3>
+                     <div class="chart-container h-64 md:h-80 !max-w-xl">
+                        <canvas id="segmentoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="details" class="page-content hidden">
+             <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Programações 2025</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto">Explore a lista completa de cursos e eventos planejados para 2025. Utilize os filtros abaixo para navegar pelas atividades de cada segmento específico e visualizar os detalhes como data, local e status atual de cada iniciativa.</p>
+            </div>
+            <div class="flex flex-col items-center gap-4 mb-8">
+                <div class="flex flex-wrap justify-center items-center gap-2">
+                    <span class="font-semibold mr-2 text-slate-700">Segmento:</span>
+                    <div id="segment-filters" class="flex flex-wrap justify-center gap-2">
+                         <button class="filter-button active px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="todos" data-group="segment">Todos</button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-2">
+                    <span class="font-semibold mr-2 text-slate-700">Tipo:</span>
+                    <div id="type-filters" class="flex flex-wrap justify-center gap-2">
+                         <button class="filter-button active px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="todos" data-group="type">Todos</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="Curso Premium" data-group="type">Cursos Premium</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="Evento" data-group="type">Eventos</button>
+                    </div>
+                </div>
+            </div>
+            <div id="activities-container">
+                <div id="realizados-section">
+                    <h3 class="text-2xl font-bold mb-4 pb-2 border-b-2 border-slate-300 text-slate-800">✅ Realizados</h3>
+                    <div id="realizados-cursos-section" class="mt-6">
+                        <h4 class="text-xl font-semibold mb-4 text-blue-700">Cursos Premium</h4>
+                        <div id="realizados-cursos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+                     <div id="realizados-eventos-section" class="mt-8">
+                        <h4 class="text-xl font-semibold mb-4 text-teal-700">Eventos</h4>
+                        <div id="realizados-eventos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+                    <p id="no-realizados" class="text-slate-500 hidden mt-6 text-center">Nenhuma atividade realizada encontrada para os filtros selecionados.</p>
+                </div>
+        
+                <div id="previstos-section" class="mt-12">
+                    <h3 class="text-2xl font-bold mb-4 pb-2 border-b-2 border-slate-300 text-slate-800">📅 Previstos</h3>
+                     <div id="previstos-cursos-section" class="mt-6">
+                        <h4 class="text-xl font-semibold mb-4 text-blue-600">Cursos Premium</h4>
+                        <div id="previstos-cursos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+                     <div id="previstos-eventos-section" class="mt-8">
+                        <h4 class="text-xl font-semibold mb-4 text-teal-600">Eventos</h4>
+                        <div id="previstos-eventos-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+                    <p id="no-previstos" class="text-slate-500 hidden mt-6 text-center">Nenhuma atividade prevista encontrada para os filtros selecionados.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline" class="page-content hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Linha do Tempo 2025-2026</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto">Visualize a distribuição de todas as atividades ao longo do tempo. Use os filtros para analisar a concentração de cursos e eventos por período e segmento.</p>
+            </div>
+            <div class="flex flex-col items-center gap-4 mb-8">
+                <div class="flex flex-wrap justify-center items-center gap-2">
+                    <span class="font-semibold mr-2 text-slate-700">Ano:</span>
+                    <div id="timeline-year-filters" class="flex flex-wrap justify-center gap-2">
+                         <button class="filter-button active px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="todos" data-group="year-timeline">Todos</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="2025" data-group="year-timeline">2025</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="2026" data-group="year-timeline">2026</button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-2">
+                    <span class="font-semibold mr-2 text-slate-700">Segmento:</span>
+                    <div id="timeline-segment-filters" class="flex flex-wrap justify-center gap-2">
+                         <button class="filter-button active px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="todos" data-group="segment-timeline">Todos</button>
+                    </div>
+                </div>
+                <div class="flex flex-wrap justify-center items-center gap-2">
+                    <span class="font-semibold mr-2 text-slate-700">Tipo:</span>
+                    <div id="timeline-type-filters" class="flex flex-wrap justify-center gap-2">
+                         <button class="filter-button active px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="todos" data-group="type-timeline">Todos</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="Curso Premium" data-group="type-timeline">Cursos Premium</button>
+                         <button class="filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm" data-filter="Evento" data-group="type-timeline">Eventos</button>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="chart-container">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <section id="plan-2026" class="page-content hidden">
+             <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Planejamento Estratégico 2026</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção delineia a visão e as diretrizes para 2026, focando na expansão das iniciativas de sucesso e na exploração de novas oportunidades de mercado. O portfólio detalhado será desenvolvido com base nas análises de 2025.</p>
+            </div>
+            <div id="plan-2026-content" class="space-y-8">
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Chart.register(ChartDataLabels);
+            
+            const data2025 = [
+                { name: 'Workshop Cyber Security', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Junho 2025', location: 'CEP Elias' },
+                { name: 'Técnico em Defesa Cibernética', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Agosto 2025', location: 'CEP Elias' },
+                { name: 'Engenharia de Prompt', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Setembro 2025', location: 'CEP Elias' },
+                { name: 'Pentest na Prática', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Outubro 2025', location: 'CEP Elias' },
+                { name: 'Ciclo de Workshops Autodesk e Adobe', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Outubro 2025', location: 'CEP Elias' },
+                { name: 'Mídias Criativas com IA', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Novembro 2025', location: 'CEP Elias' },
+                { name: 'IA RV', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Maio 2025', location: 'CEP Rio Verde' },
+                { name: 'SENAC Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Maio 2025', location: 'SESC Cidadania' },
+                { name: 'Desvendando os Mistérios do Vinho', segment: 'Gastronomia', type: 'Curso Premium', date: 'Janeiro 2025', location: 'Goiânia' },
+                { name: 'Barista Fundamental', segment: 'Gastronomia', type: 'Curso Premium', date: 'Abril 2025', location: 'Goiânia' },
+                { name: 'Desvendando os Mistérios do Vinho', segment: 'Gastronomia', type: 'Curso Premium', date: 'Novembro 2025', location: 'Goiânia (Felipe Prigol)' },
+                { name: 'Semana da Gastronomia Regional', segment: 'Gastronomia', type: 'Evento', date: '1º Semestre 2025', location: 'DF e RJ' },
+                { name: 'Café Fest 2025', segment: 'Gastronomia', type: 'Evento', date: 'Abril 2025', location: 'Goiânia' },
+                { name: 'FICA 2025', segment: 'Gastronomia', type: 'Evento', date: 'Maio 2025', location: 'N/A' },
+                { name: 'Circuito X', segment: 'Gastronomia', type: 'Evento', date: 'Maio 2025', location: 'N/A' },
+                { name: 'Expoturismo', segment: 'Gastronomia', type: 'Evento', date: 'Julho 2025', location: 'Centro de Convenções' },
+                { name: 'Goiás Gastronomia', segment: 'Gastronomia', type: 'Evento', date: 'Agosto 2025', location: 'N/A' },
+                { name: 'Circuito Gastronômico de Pirenópolis', segment: 'Gastronomia', type: 'Evento', date: 'Setembro 2025', location: 'Pirenópolis' },
+                { name: 'Feira do Empreendedor de Trindade', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'Trindade' },
+                { name: 'Prazeres da Mesa (SP)', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'São Paulo' },
+                { name: 'Cozinha Show FIC 2025', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'Goiânia' },
+                { name: 'Circuito Gastronômico da Cidade de Goiás', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2025', location: 'N/A' },
+                { name: 'I.A. para Negócios', segment: 'Gestão', type: 'Curso Premium', date: 'Agosto 2025', location: '(Hotel)' },
+                { name: 'I.A. para Gestão Pública', segment: 'Gestão', type: 'Curso Premium', date: 'Novembro 2025', location: '(Fecomércio)' },
+                { name: 'Superagos 2025', segment: 'Gestão', type: 'Evento', date: 'Setembro 2025', location: 'Centro de Convenções de Goiânia' },
+                { name: 'Dia da Noiva', segment: 'Beleza', type: 'Curso Premium', date: 'Março 2025', location: 'CEP Elias' },
+                { name: 'Visagismo na Barbearia', segment: 'Beleza', type: 'Curso Premium', date: 'Novembro 2025', location: 'CEP Elias' },
+                { name: 'Fegobel 2025', segment: 'Beleza', type: 'Evento', date: 'Junho 2025', location: 'Centro de Convenções de Goiânia' },
+                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2025', location: 'CEP Anápolis' },
+                { name: 'Criação de Coleções em 3D e IA', segment: 'Moda', type: 'Curso Premium', date: 'Outubro 2025', location: 'CEP Elias' },
+                { name: 'Negócios de Brechó – da Curadoria ao VM', segment: 'Moda', type: 'Curso Premium', date: 'Novembro 2025', location: 'CEP Elias' },
+                { name: 'COMTEX', segment: 'Moda', type: 'Evento', date: 'Maio 2025', location: 'Centro de Convenções da PUC' },
+                { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Junho 2025', location: 'Casa Cor' },
+                { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Agosto 2025', location: 'Vila Cultural' },
+                { name: 'Exposudeste', segment: 'Moda', type: 'Evento', date: 'Setembro 2025', location: 'Catalão' },
+                { name: 'Terapias Avançadas no Tratamento de Feridas: Tecnologias Inovadoras e Cuidados Especializados', segment: 'Saúde', type: 'Curso Premium', date: 'Junho 2025', location: 'CEP Anápolis' },
+                { name: 'Perícia Judicial em Saúde', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2025', location: 'CEP Elias' },
+                { name: 'Laudos e Pareceres Técnicos em Perícia Judicial de Saúde', segment: 'Saúde', type: 'Curso Premium', date: 'Novembro 2025', location: 'N/A' },
+            ];
+
+            const data2026 = [
+                { name: 'Unity 3D com IA: Criação de NPC´s Inteligentes', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
+                { name: 'Arquitetura Zero Trust: Uma Mudança de Paradigma', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Cora' },
+                { name: 'Agentic AI: Arquitetando a Empresa Autônoma', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Cora' },
+                { name: 'UX para Negócios: Experiência como Diferencial Competitivo', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Cora' },
+                { name: 'Pentest em Aplicações Web', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Cora' },
+                { name: 'Blender AI Pro: Acelere sua Produção 3D com IA', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Linux para DevOps: Contêineres com Docker e Kubernetes', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Cora' },
+                { name: 'IA para Todos: Aplicações para Negócios', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Novembro 2026', location: 'CEP Cora' },
+                { name: 'Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Abril 2026', location: 'CEP Cora Coralina' },
+                { name: 'SENAC AI Connect', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Junho 2026', location: 'CEP Cora Coralina' },
+                { name: 'Festival Hacker SENAC', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Agosto 2026', location: 'CEP Cora Coralina' },
+                { name: 'Competições Regionais de TI', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Outubro 2026', location: 'CEP Cora Coralina' },
+                { name: 'Sabor em Equilíbrio: Técnicas de Confeitaria Sem Açúcar', segment: 'Gastronomia', type: 'Curso Premium', date: 'Janeiro 2026', location: 'Cora Alego' },
+                { name: 'Café Lucrativo: Equipamentos Inteligentes para Aumentar o Faturamento', segment: 'Gastronomia', type: 'Curso Premium', date: 'Fevereiro 2026', location: 'Cora Alego' },
+                { name: 'Panificação artesanal como estratégia de rentabilidade e experiência gastronômica', segment: 'Gastronomia', type: 'Curso Premium', date: 'Março 2026', location: 'Cora TJ' },
+                { name: 'Fermentação lenta, crescimento rápido: como diferenciar seu negócio com técnica', segment: 'Gastronomia', type: 'Curso Premium', date: 'Abril 2026', location: 'Cora TJ' },
+                { name: 'Quitandas premium: oportunidades para cafés, hotéis e empórios', segment: 'Gastronomia', type: 'Curso Premium', date: 'Maio 2026', location: 'Cora TJ' },
+                { name: 'Hotelaria Rentável: Café da Manhã com Eficiência e Qualidade', segment: 'Gastronomia', type: 'Curso Premium', date: 'Junho 2026', location: 'Cora TJ' },
+                { name: 'Speed oven: equipamentos compactos e soluções eficientes para Bares e Restaurantes', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora TJ' },
+                { name: 'Finalização Inteligente: A Nova Geração de Processos Gastronômicos', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora TJ' },
+                { name: 'Speed pizza: Montagem rápida, lucro quente', segment: 'Gastronomia', type: 'Curso Premium', date: 'Setembro 2026', location: 'Cora TJ' },
+                { name: 'Cozinha do Futuro: Otimização do Tempo e Aumento da Rentabilidade com Cook & Chill', segment: 'Gastronomia', type: 'Curso Premium', date: 'Outubro 2026', location: 'Cora Alego' },
+                { name: 'Produção Modular: Soluções Integradas para Eventos, Delivery e Buffet', segment: 'Gastronomia', type: 'Curso Premium', date: 'Novembro 2026', location: 'Cora Alego' },
+                { name: 'Rotulagem como ferramenta de valor: Gestão Inteligente para o Crescimento do Negócio', segment: 'Gastronomia', type: 'Curso Premium', date: 'Dezembro 2026', location: 'Cora Alego' },
+                { name: 'Semana da Gastronomia Regional', segment: 'Gastronomia', type: 'Evento', date: '1º Semestre 2026', location: 'DF e RJ' },
+                { name: 'Café Fest', segment: 'Gastronomia', type: 'Evento', date: 'Abril 2026', location: 'Goiânia' },
+                { name: 'FICA 2026', segment: 'Gastronomia', type: 'Evento', date: 'Maio 2026', location: 'N/A' },
+                { name: 'Circuito X', segment: 'Gastronomia', type: 'Evento', date: 'Maio 2026', location: 'N/A' },
+                { name: 'Expoturismo', segment: 'Gastronomia', type: 'Evento', date: 'Julho 2026', location: 'Centro de Convenções' },
+                { name: 'Goiás Gastronomia', segment: 'Gastronomia', type: 'Evento', date: 'Agosto 2026', location: 'N/A' },
+                { name: 'Circuito Gastronômico de Pirenópolis', segment: 'Gastronomia', type: 'Evento', date: 'Setembro 2026', location: 'Pirenópolis' },
+                { name: 'Feira do Empreendedor de Trindade', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2026', location: 'Trindade' },
+                { name: 'Cozinha Show FIC', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2026', location: 'Goiânia' },
+                { name: 'Circuito Gastronômico da Cidade de Goiás', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2026', location: 'N/A' },
+                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Março 2026', location: 'Goiânia' },
+                { name: 'Agrotech', segment: 'Gestão', type: 'Curso Premium', date: 'Abril 2026', location: 'Rio Verde' },
+                { name: 'I.A. para Gestão da Educação', segment: 'Gestão', type: 'Curso Premium', date: 'Maio 2026', location: 'Goiânia' },
+                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Junho 2026', location: 'Rio Verde' },
+                { name: 'Health Tech', segment: 'Gestão', type: 'Curso Premium', date: 'Agosto 2026', location: 'Goiânia' },
+                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Setembro 2026', location: 'Anápolis' },
+                { name: 'Gestão de Projetos PMI', segment: 'Gestão', type: 'Curso Premium', date: 'Outubro 2026', location: 'Rio Verde' },
+                { name: 'Criação de Produtos Digitais e Escale em Vendas', segment: 'Gestão', type: 'Curso Premium', date: 'Novembro 2026', location: 'Goiânia' },
+                { name: 'Superagos', segment: 'Gestão', type: 'Evento', date: 'Setembro 2026', location: 'Centro de Convenções de Goiânia' },
+                { name: 'FIC', segment: 'Gestão', type: 'Evento', date: 'Outubro 2026', location: 'Centro de Convenções de Goiânia' },
+                { name: 'Consultor de Beleza Personalizada', segment: 'Beleza', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
+                { name: 'Tricolab 5.0 - Ciência e Tecnologia em Saúde Capilar', segment: 'Beleza', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Fegobel', segment: 'Beleza', type: 'Evento', date: 'Junho 2026', location: 'Centro de Convenções de Goiânia' },
+                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2026', location: 'CEP Anápolis' },
+                { name: 'Como Montar um Brechó do Zero - da Curadoria ao VM', segment: 'Moda', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
+                { name: 'Moda 5.0 - Social Commerce', segment: 'Moda', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
+                { name: 'SFW', segment: 'Moda', type: 'Evento', date: 'Setembro 2026', location: 'N/A' },
+                { name: 'Neuronutrição - Cérebro, Tecnologia e Comportamento Alimentar', segment: 'Saúde', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
+                { name: 'Taping - Dor e Movimento', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
+            ];
+            
+            const allData = [...data2025, ...data2026];
+
+            const monthMap = { 'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3, 'maio': 4, 'junho': 5, 'julho': 6, 'agosto': 7, 'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11 };
+            const currentMonth = 9; // October is month 9 (0-indexed)
+
+            data2025.forEach(item => {
+                const datePart = item.date.toLowerCase().split(' ')[0];
+                let itemMonth = monthMap[datePart];
+                if (item.date.includes('Semestre')) {
+                    itemMonth = 5; // June
+                }
+                item.status = (itemMonth <= currentMonth && item.date.includes('2025')) ? 'Realizado' : 'Previsto';
+            });
+            
+            const allSegments = [...new Set(allData.map(item => item.segment))];
+            
+            setupNavigation();
+            setupDashboard(data2025, allSegments);
+            setupDetailsPage(data2025, allSegments);
+            setup2026Page(data2026, allSegments);
+            setupTimelinePage(allData, allSegments);
+        });
+
+        function setupNavigation() {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    pages.forEach(page => {
+                        if (page.id === targetId) {
+                            page.classList.remove('hidden');
+                        } else {
+                            page.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+        }
+
+        function setupDashboard(data, segments) {
+            const cursos = data.filter(d => d.type === 'Curso Premium');
+            const eventos = data.filter(d => d.type === 'Evento');
+            
+            document.getElementById('cursos-total').textContent = cursos.length;
+            document.getElementById('cursos-realizados').textContent = cursos.filter(c => c.status === 'Realizado').length;
+            document.getElementById('eventos-total').textContent = eventos.length;
+            document.getElementById('eventos-realizados').textContent = eventos.filter(e => e.status === 'Realizado').length;
+
+            renderGeralProgressChart(data);
+            renderSegmentoChart(data, segments.filter(seg => data.some(d => d.segment === seg)));
+        }
+        
+        function setupDetailsPage(data, segments) {
+            const segmentFiltersContainer = document.getElementById('segment-filters');
+            
+            const grids = {
+                realizadosCursos: document.getElementById('realizados-cursos-grid'),
+                realizadosEventos: document.getElementById('realizados-eventos-grid'),
+                previstosCursos: document.getElementById('previstos-cursos-grid'),
+                previstosEventos: document.getElementById('previstos-eventos-grid'),
+            };
+            
+            grids.realizadosCursos.innerHTML = '';
+            grids.realizadosEventos.innerHTML = '';
+            grids.previstosCursos.innerHTML = '';
+            grids.previstosEventos.innerHTML = '';
+
+            let activeSegment = 'todos';
+            let activeType = 'todos';
+            
+            // Clear old filters except for the "Todos" button
+            const existingFilters = segmentFiltersContainer.querySelectorAll('button:not([data-filter="todos"])');
+            existingFilters.forEach(f => f.remove());
+            
+            segments.forEach(segment => {
+                const button = document.createElement('button');
+                button.className = 'filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm';
+                button.textContent = segment;
+                button.dataset.filter = segment;
+                button.dataset.group = 'segment';
+                segmentFiltersContainer.appendChild(button);
+            });
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'activity-card bg-white p-5 rounded-lg shadow-md border-l-4';
+                card.dataset.segment = item.segment;
+                card.dataset.type = item.type;
+                
+                let statusClass = '';
+                if (item.type === 'Curso Premium') {
+                    statusClass = item.status === 'Realizado' ? 'border-blue-600' : 'border-blue-300';
+                } else { // Evento
+                    statusClass = item.status === 'Realizado' ? 'border-teal-600' : 'border-teal-200';
+                }
+                card.classList.add(statusClass);
+
+                const statusBadge = item.status === 'Realizado' 
+                    ? `<span class="text-xs font-semibold px-2 py-1 bg-green-100 text-green-800 rounded-full">${item.status}</span>`
+                    : `<span class="text-xs font-semibold px-2 py-1 bg-orange-100 text-orange-800 rounded-full">${item.status}</span>`;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-semibold text-slate-500">${item.segment.toUpperCase()}</span>
+                        ${statusBadge}
+                    </div>
+                    <h4 class="text-lg font-bold mb-2">${item.name}</h4>
+                    <p class="text-sm text-slate-600 mb-1"><strong>Tipo:</strong> ${item.type}</p>
+                    <p class="text-sm text-slate-600 mb-1"><strong>Data:</strong> ${item.date}</p>
+                    <p class="text-sm text-slate-600"><strong>Local:</strong> ${item.location}</p>
+                `;
+
+                if (item.status === 'Realizado') {
+                    if (item.type === 'Curso Premium') grids.realizadosCursos.appendChild(card);
+                    else grids.realizadosEventos.appendChild(card);
+                } else {
+                    if (item.type === 'Curso Premium') grids.previstosCursos.appendChild(card);
+                    else grids.previstosEventos.appendChild(card);
+                }
+            });
+
+            function applyFilters() {
+                const counts = { rc: 0, re: 0, pc: 0, pe: 0 };
+
+                document.querySelectorAll('#details .activity-card').forEach(card => {
+                    const segmentMatch = activeSegment === 'todos' || card.dataset.segment === activeSegment;
+                    const typeMatch = activeType === 'todos' || card.dataset.type === activeType;
+                    
+                    if (segmentMatch && typeMatch) {
+                        card.style.display = 'block';
+                        const parentId = card.parentElement.id;
+                        if (parentId === 'realizados-cursos-grid') counts.rc++;
+                        else if (parentId === 'realizados-eventos-grid') counts.re++;
+                        else if (parentId === 'previstos-cursos-grid') counts.pc++;
+                        else if (parentId === 'previstos-eventos-grid') counts.pe++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('realizados-cursos-section').style.display = counts.rc > 0 ? 'block' : 'none';
+                document.getElementById('realizados-eventos-section').style.display = counts.re > 0 ? 'block' : 'none';
+                document.getElementById('previstos-cursos-section').style.display = counts.pc > 0 ? 'block' : 'none';
+                document.getElementById('previstos-eventos-section').style.display = counts.pe > 0 ? 'block' : 'none';
+                
+                const totalRealizados = counts.rc + counts.re;
+                const totalPrevistos = counts.pc + counts.pe;
+
+                document.getElementById('realizados-section').style.display = totalRealizados > 0 ? 'block' : 'none';
+                document.getElementById('previstos-section').style.display = totalPrevistos > 0 ? 'block' : 'none';
+
+                document.getElementById('no-realizados').style.display = totalRealizados === 0 ? 'block' : 'none';
+                document.getElementById('no-previstos').style.display = totalPrevistos === 0 ? 'block' : 'none';
+            }
+
+            document.querySelectorAll('#details .filter-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    const group = button.dataset.group;
+
+                    if (group === 'segment') {
+                        activeSegment = filter;
+                        document.querySelectorAll('#segment-filters .filter-button').forEach(btn => btn.classList.remove('active'));
+                    } else if (group === 'type') {
+                        activeType = filter;
+                        document.querySelectorAll('#type-filters .filter-button').forEach(btn => btn.classList.remove('active'));
+                    }
+                    
+                    button.classList.add('active');
+                    applyFilters();
+                });
+            });
+            applyFilters();
+        }
+        
+        function setup2026Page(data, segments) {
+            const container = document.getElementById('plan-2026-content');
+            container.innerHTML = '';
+            const icons = {'Tecnologia da Informação': '💻', 'Gastronomia': '🍲', 'Gestão': '📈', 'Beleza': '💅', 'Moda': '👗', 'Saúde': '❤️‍🩹'};
+
+            segments.forEach(segment => {
+                const segmentData = data.filter(d => d.segment === segment);
+                if (segmentData.length === 0) return;
+
+                const segmentContainer = document.createElement('div');
+                segmentContainer.className = 'bg-white p-6 rounded-lg shadow-md';
+                
+                let content = `<h3 class="text-2xl font-bold mb-4 text-slate-700">${icons[segment] || '🔹'} ${segment}</h3>`;
+                
+                const cursos = segmentData.filter(d => d.type === 'Curso Premium');
+                if (cursos.length > 0) {
+                    content += `<h4 class="text-lg font-semibold mb-2 text-blue-700">Cursos Premium</h4>`;
+                    content += '<ul class="list-disc list-inside space-y-1">';
+                    cursos.forEach(curso => {
+                        content += `<li><strong>${curso.name}</strong> - ${curso.date} | ${curso.location}</li>`;
+                    });
+                    content += '</ul>';
+                }
+
+                const eventos = segmentData.filter(d => d.type === 'Evento');
+                if (eventos.length > 0) {
+                    content += `<h4 class="text-lg font-semibold mt-4 mb-2 text-teal-700">Eventos</h4>`;
+                    content += '<ul class="list-disc list-inside space-y-1">';
+                    eventos.forEach(evento => {
+                        content += `<li><strong>${evento.name}</strong> - ${evento.date} | ${evento.location}</li>`;
+                    });
+                    content += '</ul>';
+                }
+
+                segmentContainer.innerHTML = content;
+                container.appendChild(segmentContainer);
+            });
+        }
+        
+        let timelineChart = null;
+        function setupTimelinePage(data, segments) {
+            const segmentFiltersContainer = document.getElementById('timeline-segment-filters');
+            
+            // Clear old filters except for the "Todos" button
+            const existingFilters = segmentFiltersContainer.querySelectorAll('button:not([data-filter="todos"])');
+            existingFilters.forEach(f => f.remove());
+            
+            let activeSegment = 'todos';
+            let activeType = 'todos';
+            let activeYear = 'todos';
+
+            segments.forEach(segment => {
+                const button = document.createElement('button');
+                button.className = 'filter-button px-4 py-2 bg-white rounded-full text-sm font-medium shadow-sm';
+                button.textContent = segment;
+                button.dataset.filter = segment;
+                button.dataset.group = 'segment-timeline';
+                segmentFiltersContainer.appendChild(button);
+            });
+            
+            function updateTimeline() {
+                const filteredData = data.filter(item => {
+                    const segmentMatch = activeSegment === 'todos' || item.segment === activeSegment;
+                    const typeMatch = activeType === 'todos' || item.type === activeType;
+                    const yearMatch = activeYear === 'todos' || item.date.includes(activeYear);
+                    return segmentMatch && typeMatch && yearMatch;
+                });
+                renderTimelineChart(filteredData, segments, activeYear);
+            }
+
+             document.querySelectorAll('#timeline .filter-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const filter = button.dataset.filter;
+                    const group = button.dataset.group;
+
+                    if (group === 'segment-timeline') {
+                        activeSegment = filter;
+                        document.querySelectorAll('#timeline-segment-filters .filter-button').forEach(btn => btn.classList.remove('active'));
+                    } else if (group === 'type-timeline') {
+                        activeType = filter;
+                        document.querySelectorAll('#timeline-type-filters .filter-button').forEach(btn => btn.classList.remove('active'));
+                    } else if (group === 'year-timeline') {
+                        activeYear = filter;
+                        document.querySelectorAll('#timeline-year-filters .filter-button').forEach(btn => btn.classList.remove('active'));
+                    }
+                    
+                    button.classList.add('active');
+                    updateTimeline();
+                });
+            });
+
+            updateTimeline();
+        }
+
+        function parseDate(dateString) {
+            const monthMap = { 'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3, 'maio': 4, 'junho': 5, 'julho': 6, 'agosto': 7, 'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11 };
+            const parts = dateString.replace('º', '').toLowerCase().split(' ');
+            
+            const monthName = parts[0];
+            const year = parseInt(parts.find(p => p.length === 4 && !isNaN(p)), 10);
+            
+            if (!year) return null;
+
+            if (monthMap[monthName] !== undefined) {
+                return new Date(year, monthMap[monthName], 15);
+            } else if (dateString.includes('Semestre')) {
+                return new Date(year, 5, 30); // End of June
+            }
+            return new Date(year, 11, 31); // Default to end of year if month is unknown
+        }
+        
+        let geralProgressChart, segmentoChart;
+        function renderTimelineChart(data, segments, activeYear) {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            const groupingMaps = {
+                cursosRealizados: {},
+                cursosPrevistos: {},
+                eventosRealizados: {},
+                eventosPrevistos: {}
+            };
+
+            data.forEach(item => {
+                const date = parseDate(item.date);
+                if (!date) return;
+
+                const isRealizado = item.status === 'Realizado' && item.date.includes('2025');
+                let targetMap;
+
+                if (item.type === 'Curso Premium') {
+                    targetMap = isRealizado ? groupingMaps.cursosRealizados : groupingMaps.cursosPrevistos;
+                } else {
+                    targetMap = isRealizado ? groupingMaps.eventosRealizados : groupingMaps.eventosPrevistos;
+                }
+
+                const key = `${item.segment}-${date.getFullYear()}-${date.getMonth()}`;
+                if (!targetMap[key]) {
+                    targetMap[key] = {
+                        items: [],
+                        segment: item.segment,
+                        date: date,
+                        dateStr: item.date 
+                    };
+                }
+                targetMap[key].items.push(item);
+            });
+
+            const finalDatasets = {
+                cursosRealizados: { label: 'Cursos Realizados', backgroundColor: '#2563eb', data: [] },
+                cursosPrevistos: { label: 'Cursos Previstos', backgroundColor: '#93c5fd', data: [] },
+                eventosRealizados: { label: 'Eventos Realizados', backgroundColor: '#0d9488', data: [] },
+                eventosPrevistos: { label: 'Eventos Previstos', backgroundColor: '#99f6e4', data: [] },
+            };
+
+            for (const key in groupingMaps) {
+                const map = groupingMaps[key];
+                const datasetData = finalDatasets[key].data;
+
+                for (const groupKey in map) {
+                    const group = map[groupKey];
+                    const count = group.items.length;
+                    datasetData.push({
+                        x: group.date,
+                        y: group.segment,
+                        r: 6 + (count * 4),
+                        count: count,
+                        namesStr: group.items.map(i => i.name).join(' | '),
+                        dateStr: group.items[0].date
+                    });
+                }
+            }
+
+            if (timelineChart) {
+                timelineChart.destroy();
+            }
+
+            let minDate = '2025-01-01';
+            let maxDate = '2026-12-31';
+
+            if (activeYear === '2025') {
+                minDate = '2025-01-01';
+                maxDate = '2025-12-31';
+            } else if (activeYear === '2026') {
+                minDate = '2026-01-01';
+                maxDate = '2026-12-31';
+            }
+
+            timelineChart = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: Object.values(finalDatasets),
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    if (!context.length) return '';
+                                    const point = context[0].raw;
+                                    const dateParts = point.dateStr.split(' ');
+                                    const dateTitle = dateParts.length > 1 ? `${dateParts[0]} ${dateParts[1]}` : point.dateStr;
+                                    return `${point.y} - ${dateTitle}`;
+                                },
+                                label: function(context) {
+                                    const point = context.raw;
+                                    const names = point.namesStr.split(' | ');
+                                    if (point.count > 1) {
+                                        const lines = [`${point.count} atividades:`];
+                                        names.forEach(name => lines.push(` • ${name}`));
+                                        return lines;
+                                    }
+                                    return point.namesStr;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            display: true,
+                            color: function(context) {
+                                const bgColor = context.dataset.backgroundColor;
+                                const lightColors = ['#93c5fd', '#99f6e4'];
+                                return lightColors.includes(bgColor) ? 'black' : 'white';
+                            },
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: function(value, context) {
+                                const count = context.chart.data.datasets[context.datasetIndex].data[context.dataIndex].count;
+                                return count > 1 ? count : '';
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'category',
+                            labels: segments,
+                        },
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'month',
+                                tooltipFormat: 'MMM yyyy'
+                            },
+                            min: minDate,
+                            max: maxDate
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function renderGeralProgressChart(data) {
+            const ctx = document.getElementById('geralProgressChart').getContext('2d');
+            if (geralProgressChart) geralProgressChart.destroy();
+            
+            const cursosRealizados = data.filter(d => d.type === 'Curso Premium' && d.status === 'Realizado').length;
+            const cursosPrevistos = data.filter(d => d.type === 'Curso Premium' && d.status === 'Previsto').length;
+            const eventosRealizados = data.filter(d => d.type === 'Evento' && d.status === 'Realizado').length;
+            const eventosPrevistos = data.filter(d => d.type === 'Evento' && d.status === 'Previsto').length;
+
+            geralProgressChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cursos Realizados', 'Cursos Previstos', 'Eventos Realizados', 'Eventos Previstos'],
+                    datasets: [{
+                        data: [cursosRealizados, cursosPrevistos, eventosRealizados, eventosPrevistos],
+                        backgroundColor: ['#2563eb', '#93c5fd', '#0d9488', '#99f6e4'],
+                        borderColor: '#f8fafc',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw} atividades`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, context) => {
+                                return value > 0 ? value : '';
+                            },
+                            color: function(context) {
+                                // Light colors are at index 1 and 3
+                                return context.dataIndex === 1 || context.dataIndex === 3 ? 'black' : 'white';
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 16
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderSegmentoChart(data, segments) {
+            const ctx = document.getElementById('segmentoChart').getContext('2d');
+            if (segmentoChart) segmentoChart.destroy();
+
+            const cursosRealizadosData = segments.map(seg => data.filter(d => d.segment === seg && d.type === 'Curso Premium' && d.status === 'Realizado').length);
+            const cursosPrevistosData = segments.map(seg => data.filter(d => d.segment === seg && d.type === 'Curso Premium' && d.status === 'Previsto').length);
+            const eventosRealizadosData = segments.map(seg => data.filter(d => d.segment === seg && d.type === 'Evento' && d.status === 'Realizado').length);
+            const eventosPrevistosData = segments.map(seg => data.filter(d => d.segment === seg && d.type === 'Evento' && d.status === 'Previsto').length);
+
+            segmentoChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: segments,
+                    datasets: [
+                        { label: 'Cursos Realizados', data: cursosRealizadosData, backgroundColor: '#2563eb' },
+                        { label: 'Cursos Previstos', data: cursosPrevistosData, backgroundColor: '#93c5fd' },
+                        { label: 'Eventos Realizados', data: eventosRealizadosData, backgroundColor: '#0d9488' },
+                        { label: 'Eventos Previstos', data: eventosPrevistosData, backgroundColor: '#99f6e4' },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { stacked: true, beginAtZero: true },
+                        y: { stacked: true }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                             callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw} atividades`;
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: function(context) {
+                                const bgColor = context.dataset.backgroundColor;
+                                const lightColors = ['#93c5fd', '#99f6e4'];
+                                return lightColors.includes(bgColor) ? 'black' : 'white';
+                            },
+                            font: { weight: 'bold' },
+                            formatter: function(value, context) {
+                                return value > 0 ? value : '';
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
+
