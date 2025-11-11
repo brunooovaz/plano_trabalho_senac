@@ -60,6 +60,7 @@
                 <button data-target="details" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Programações 2025</button>
                 <button data-target="timeline" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Linha do Tempo</button>
                 <button data-target="plan-2026" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Planejamento 2026</button>
+                <button data-target="divulgacao" class="nav-button px-4 py-2 rounded-lg font-semibold text-slate-700 hover:bg-slate-200">Foco da Divulgação</button>
             </nav>
         </div>
     </header>
@@ -196,6 +197,30 @@
             </div>
         </section>
 
+        <section id="divulgacao" class="page-content hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-2">Foco da Divulgação 2025/2 e 2026</h2>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção detalha as áreas prioritárias para divulgação, visando maximizar o alcance e o impacto das nossas iniciativas estratégicas.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-700">Unidades</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg">
+                        <li>CEP ELIAS BUFÁIÇAL</li>
+                        <li>CEP CORA CORALINA</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4 text-slate-700">Cursos/Segmentos</h3>
+                    <ul class="list-disc list-inside space-y-2 text-lg">
+                        <li>TECNOLOGIA DA INFORMAÇÃO</li>
+                        <li>GASTRONOMIA</li>
+                        <li>CURSOS PREMIUM (TODOS)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <script>
@@ -222,8 +247,8 @@
                 { name: 'Goiás Gastronomia', segment: 'Gastronomia', type: 'Evento', date: 'Agosto 2025', location: 'N/A' },
                 { name: 'Circuito Gastronômico de Pirenópolis', segment: 'Gastronomia', type: 'Evento', date: 'Setembro 2025', location: 'Pirenópolis' },
                 { name: 'Feira do Empreendedor de Trindade', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'Trindade' },
-                { name: 'Prazeres da Mesa (SP)', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'São Paulo' },
-                { name: 'Cozinha Show FIC 2025', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2025', location: 'Goiânia' },
+                { name: 'Prazeres da Mesa (SP)', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2025', location: 'São Paulo' },
+                { name: 'Cozinha Show FIC 2025', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2025', location: 'Goiânia' },
                 { name: 'Circuito Gastronômico da Cidade de Goiás', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2025', location: 'N/A' },
                 { name: 'I.A. para Negócios', segment: 'Gestão', type: 'Curso Premium', date: 'Agosto 2025', location: '(Hotel)' },
                 { name: 'I.A. para Gestão Pública', segment: 'Gestão', type: 'Curso Premium', date: 'Novembro 2025', location: '(Fecomércio)' },
@@ -233,7 +258,6 @@
                 { name: 'Fegobel 2025', segment: 'Beleza', type: 'Evento', date: 'Junho 2025', location: 'Centro de Convenções de Goiânia' },
                 { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2025', location: 'CEP Anápolis' },
                 { name: 'Criação de Coleções em 3D e IA', segment: 'Moda', type: 'Curso Premium', date: 'Outubro 2025', location: 'CEP Elias' },
-                { name: 'Negócios de Brechó – da Curadoria ao VM', segment: 'Moda', type: 'Curso Premium', date: 'Novembro 2025', location: 'CEP Elias' },
                 { name: 'COMTEX', segment: 'Moda', type: 'Evento', date: 'Maio 2025', location: 'Centro de Convenções da PUC' },
                 { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Junho 2025', location: 'Casa Cor' },
                 { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Agosto 2025', location: 'Vila Cultural' },
@@ -289,20 +313,27 @@
                 { name: 'Superagos', segment: 'Gestão', type: 'Evento', date: 'Setembro 2026', location: 'Centro de Convenções de Goiânia' },
                 { name: 'FIC', segment: 'Gestão', type: 'Evento', date: 'Outubro 2026', location: 'Centro de Convenções de Goiânia' },
                 { name: 'Consultor de Beleza Personalizada', segment: 'Beleza', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
-                { name: 'Tricolab 5.0 - Ciência e Tecnologia em Saúde Capilar', segment: 'Beleza', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Tricolab 5.0 - Ciência e Tecnologia em Saúde Capilar', segment: 'Beleza', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Elias' },
+                { name: 'Maquiagem para Fotografia e Vídeo', segment: 'Beleza', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Técnicas Avançadas de Maquiagem: Cut Crease, Smokey Eye e Contorno', segment: 'Beleza', type: 'Curso Premium', date: 'Novembro 2026', location: 'CEP Elias' },
+                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Maio 2026', location: 'CEP Elias / CEP Aparecida' },
                 { name: 'Fegobel', segment: 'Beleza', type: 'Evento', date: 'Junho 2026', location: 'Centro de Convenções de Goiânia' },
                 { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2026', location: 'CEP Anápolis' },
-                { name: 'Como Montar um Brechó do Zero - da Curadoria ao VM', segment: 'Moda', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
+                { name: 'Técnicas de Upcycling para uma Moda Sustentável', segment: 'Moda', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
+                { name: 'Técnicas de Artesanato para Criação de Moda', segment: 'Moda', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Elias' },
+                { name: 'Consultoria de Imagem no Varejo de Moda com Agente de IA', segment: 'Moda', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
                 { name: 'Moda 5.0 - Social Commerce', segment: 'Moda', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
-                { name: 'SFW', segment: 'Moda', type: 'Evento', date: 'Setembro 2026', location: 'N/A' },
-                { name: 'Neuronutrição - Cérebro, Tecnologia e Comportamento Alimentar', segment: 'Saúde', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
-                { name: 'Taping - Dor e Movimento', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
+                { name: 'Senac Fashion School', segment: 'Moda', type: 'Evento', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Neuronutrição - Cérebro, Tecnologia e Comportamento Alimentar', segment: 'Saúde', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
+                { name: 'Taping - Dor e Movimento', segment: 'Saúde', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Elias' },
+                { name: 'Aleitamento Materno: Para Mães e Profissionais', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
+                { name: 'Furo Humanizado: Técnica, Ética e Cuidado', segment: 'Saúde', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
             ];
             
             const allData = [...data2025, ...data2026];
 
             const monthMap = { 'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3, 'maio': 4, 'junho': 5, 'julho': 6, 'agosto': 7, 'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11 };
-            const currentMonth = 9; // October is month 9 (0-indexed)
+            const currentMonth = 10; // November is month 10 (0-indexed)
 
             data2025.forEach(item => {
                 const datePart = item.date.toLowerCase().split(' ')[0];
@@ -842,4 +873,3 @@
     </script>
 </body>
 </html>
-
