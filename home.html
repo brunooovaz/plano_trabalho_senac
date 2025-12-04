@@ -12,10 +12,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Corporate Blue/Teal -->
-    <!-- Application Structure Plan: A single-page dashboard application with top navigation to switch between four views: 'Dashboard 2025', 'Detalhes 2025', 'Linha do Tempo', and 'Planejamento 2026'. The dashboard provides a high-level summary. The 'Detalhes' view allows deep filtering. The 'Linha do Tempo' provides a chronological overview. 'Planejamento 2026' shows future plans. This structure supports multiple analysis angles: summary, detailed, chronological, and future-focused. -->
-    <!-- Visualization & Content Choices: 1. KPIs: Goal: Inform -> Dynamic Stats. 2. Overall Progress: Goal: Inform Proportion -> Doughnut Chart. 3. Activities per Segment: Goal: Compare -> Stacked Bar Chart. 4. Activity List: Goal: Organize/Explore -> Filterable Cards. 5. Timeline: Goal: See Change/Distribution -> Bubble Chart on Time Axis (Chart.js) -> Hover tooltip/Filters -> Shows activity distribution over time for strategic planning. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -70,7 +66,7 @@
         <section id="dashboard" class="page-content">
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold mb-2">Dashboard de Desempenho 2025</h2>
-                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção apresenta uma visão geral e consolidada das principais métricas e do progresso das atividades planejadas para 2025. Utilize os gráficos interativos para comparar o desempenho entre os diferentes segmentos de atuação.</p>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção apresenta uma visão geral e consolidada das principais métricas e do progresso das atividades planejadas para 2025.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -105,7 +101,7 @@
         <section id="details" class="page-content hidden">
              <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold mb-2">Programações 2025</h2>
-                <p class="text-slate-600 max-w-3xl mx-auto">Explore a lista completa de cursos e eventos planejados para 2025. Utilize os filtros abaixo para navegar pelas atividades de cada segmento específico e visualizar os detalhes como data, local e status atual de cada iniciativa.</p>
+                <p class="text-slate-600 max-w-3xl mx-auto">Explore a lista completa de cursos e eventos planejados para 2025.</p>
             </div>
             <div class="flex flex-col items-center gap-4 mb-8">
                 <div class="flex flex-wrap justify-center items-center gap-2">
@@ -155,7 +151,7 @@
         <section id="timeline" class="page-content hidden">
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold mb-2">Linha do Tempo 2025-2026</h2>
-                <p class="text-slate-600 max-w-3xl mx-auto">Visualize a distribuição de todas as atividades ao longo do tempo. Use os filtros para analisar a concentração de cursos e eventos por período e segmento.</p>
+                <p class="text-slate-600 max-w-3xl mx-auto">Visualize a distribuição de todas as atividades ao longo do tempo.</p>
             </div>
             <div class="flex flex-col items-center gap-4 mb-8">
                 <div class="flex flex-wrap justify-center items-center gap-2">
@@ -191,7 +187,7 @@
         <section id="plan-2026" class="page-content hidden">
              <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold mb-2">Planejamento Estratégico 2026</h2>
-                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção delineia a visão e as diretrizes para 2026, focando na expansão das iniciativas de sucesso e na exploração de novas oportunidades de mercado. O portfólio detalhado será desenvolvido com base nas análises de 2025.</p>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção delineia a visão e as diretrizes para 2026.</p>
             </div>
             <div id="plan-2026-content" class="space-y-8">
             </div>
@@ -200,7 +196,7 @@
         <section id="divulgacao" class="page-content hidden">
             <div class="text-center mb-8">
                 <h2 class="text-3xl font-bold mb-2">Foco da Divulgação 2025/2 e 2026</h2>
-                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção detalha as áreas prioritárias para divulgação, visando maximizar o alcance e o impacto das nossas iniciativas estratégicas.</p>
+                <p class="text-slate-600 max-w-3xl mx-auto">Esta seção detalha as áreas prioritárias para divulgação.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="bg-white p-6 rounded-lg shadow-md">
@@ -262,36 +258,39 @@
                 { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Junho 2025', location: 'Casa Cor' },
                 { name: 'Exposição Caelestis', segment: 'Moda', type: 'Evento', date: 'Agosto 2025', location: 'Vila Cultural' },
                 { name: 'Exposudeste', segment: 'Moda', type: 'Evento', date: 'Setembro 2025', location: 'Catalão' },
-                { name: 'Terapias Avançadas no Tratamento de Feridas: Tecnologias Inovadoras e Cuidados Especializados', segment: 'Saúde', type: 'Curso Premium', date: 'Junho 2025', location: 'CEP Anápolis' },
+                { name: 'Terapias Avançadas no Tratamento de Feridas', segment: 'Saúde', type: 'Curso Premium', date: 'Junho 2025', location: 'CEP Anápolis' },
                 { name: 'Perícia Judicial em Saúde', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2025', location: 'CEP Elias' },
-                { name: 'Laudos e Pareceres Técnicos em Perícia Judicial de Saúde', segment: 'Saúde', type: 'Curso Premium', date: 'Novembro 2025', location: 'N/A' },
+                { name: 'Laudos e Pareceres Técnicos em Perícia Judicial', segment: 'Saúde', type: 'Curso Premium', date: 'Novembro 2025', location: 'N/A' },
             ];
 
             const data2026 = [
                 { name: 'Unity 3D com IA: Criação de NPC´s Inteligentes', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
                 { name: 'Arquitetura Zero Trust: Uma Mudança de Paradigma', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Cora' },
                 { name: 'Agentic AI: Arquitetando a Empresa Autônoma', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Cora' },
-                { name: 'UX para Negócios: Experiência como Diferencial Competitivo', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Cora' },
+                { name: 'UX para Negócios: Experiência como Diferencial', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Cora' },
                 { name: 'Pentest em Aplicações Web', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Cora' },
                 { name: 'Blender AI Pro: Acelere sua Produção 3D com IA', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
-                { name: 'Linux para DevOps: Contêineres com Docker e Kubernetes', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Cora' },
+                { name: 'Linux para DevOps: Contêineres com Docker', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Cora' },
                 { name: 'IA para Todos: Aplicações para Negócios', segment: 'Tecnologia da Informação', type: 'Curso Premium', date: 'Novembro 2026', location: 'CEP Cora' },
-                { name: 'Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Abril 2026', location: 'CEP Cora Coralina' },
-                { name: 'SENAC AI Connect', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Junho 2026', location: 'CEP Cora Coralina' },
+                { name: 'Xperience Day', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Fevereiro 2026', location: 'SESC Cidadania' },
+                { name: 'Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Março 2026', location: 'CEP Rio Verde' },
+                { name: 'Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Março 2026', location: 'CEP Anápolis' },
+                { name: 'Infinite Summit', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Setembro 2026', location: 'CEP Cora Coralina' },
+                { name: 'SENAC AI Connect', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Maio 2026', location: 'CEP Cora Coralina' },
                 { name: 'Festival Hacker SENAC', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Agosto 2026', location: 'CEP Cora Coralina' },
-                { name: 'Competições Regionais de TI', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Outubro 2026', location: 'CEP Cora Coralina' },
-                { name: 'Sabor em Equilíbrio: Técnicas de Confeitaria Sem Açúcar', segment: 'Gastronomia', type: 'Curso Premium', date: 'Janeiro 2026', location: 'Cora Alego' },
-                { name: 'Café Lucrativo: Equipamentos Inteligentes para Aumentar o Faturamento', segment: 'Gastronomia', type: 'Curso Premium', date: 'Fevereiro 2026', location: 'Cora Alego' },
-                { name: 'Panificação artesanal como estratégia de rentabilidade e experiência gastronômica', segment: 'Gastronomia', type: 'Curso Premium', date: 'Março 2026', location: 'Cora TJ' },
-                { name: 'Fermentação lenta, crescimento rápido: como diferenciar seu negócio com técnica', segment: 'Gastronomia', type: 'Curso Premium', date: 'Abril 2026', location: 'Cora TJ' },
-                { name: 'Quitandas premium: oportunidades para cafés, hotéis e empórios', segment: 'Gastronomia', type: 'Curso Premium', date: 'Maio 2026', location: 'Cora TJ' },
-                { name: 'Hotelaria Rentável: Café da Manhã com Eficiência e Qualidade', segment: 'Gastronomia', type: 'Curso Premium', date: 'Junho 2026', location: 'Cora TJ' },
-                { name: 'Speed oven: equipamentos compactos e soluções eficientes para Bares e Restaurantes', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora TJ' },
-                { name: 'Finalização Inteligente: A Nova Geração de Processos Gastronômicos', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora TJ' },
+                { name: 'Competições Regionais de TI', segment: 'Tecnologia da Informação', type: 'Evento', date: 'Novembro 2026', location: 'CEP Cora Coralina' },
+                { name: 'Sabor em Equilíbrio: Técnicas de Confeitaria Sem Açúcar', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora Alego' },
+                { name: 'Café Lucrativo: Equipamentos Inteligentes', segment: 'Gastronomia', type: 'Curso Premium', date: 'Fevereiro 2026', location: 'Cora Alego' },
+                { name: 'Panificação artesanal como estratégia de rentabilidade', segment: 'Gastronomia', type: 'Curso Premium', date: 'Março 2026', location: 'Cora TJ' },
+                { name: 'Fermentação lenta, crescimento rápido', segment: 'Gastronomia', type: 'Curso Premium', date: 'Abril 2026', location: 'Cora TJ' },
+                { name: 'Quitandas premium: oportunidades para cafés', segment: 'Gastronomia', type: 'Curso Premium', date: 'Maio 2026', location: 'Cora TJ' },
+                { name: 'Hotelaria Rentável: Café da Manhã com Eficiência', segment: 'Gastronomia', type: 'Curso Premium', date: 'Junho 2026', location: 'Cora TJ' },
+                { name: 'Speed oven: equipamentos compactos e soluções', segment: 'Gastronomia', type: 'Curso Premium', date: 'Janeiro 2026', location: 'Cora TJ' },
+                { name: 'Finalização Inteligente: A Nova Geração', segment: 'Gastronomia', type: 'Curso Premium', date: 'Julho 2026', location: 'Cora TJ' },
                 { name: 'Speed pizza: Montagem rápida, lucro quente', segment: 'Gastronomia', type: 'Curso Premium', date: 'Setembro 2026', location: 'Cora TJ' },
-                { name: 'Cozinha do Futuro: Otimização do Tempo e Aumento da Rentabilidade com Cook & Chill', segment: 'Gastronomia', type: 'Curso Premium', date: 'Outubro 2026', location: 'Cora Alego' },
-                { name: 'Produção Modular: Soluções Integradas para Eventos, Delivery e Buffet', segment: 'Gastronomia', type: 'Curso Premium', date: 'Novembro 2026', location: 'Cora Alego' },
-                { name: 'Rotulagem como ferramenta de valor: Gestão Inteligente para o Crescimento do Negócio', segment: 'Gastronomia', type: 'Curso Premium', date: 'Dezembro 2026', location: 'Cora Alego' },
+                { name: 'Cozinha do Futuro: Otimização do Tempo', segment: 'Gastronomia', type: 'Curso Premium', date: 'Outubro 2026', location: 'Cora Alego' },
+                { name: 'Produção Modular: Soluções Integradas', segment: 'Gastronomia', type: 'Curso Premium', date: 'Novembro 2026', location: 'Cora Alego' },
+                { name: 'Rotulagem como ferramenta de valor', segment: 'Gastronomia', type: 'Curso Premium', date: 'Dezembro 2026', location: 'Cora Alego' },
                 { name: 'Semana da Gastronomia Regional', segment: 'Gastronomia', type: 'Evento', date: '1º Semestre 2026', location: 'DF e RJ' },
                 { name: 'Café Fest', segment: 'Gastronomia', type: 'Evento', date: 'Abril 2026', location: 'Goiânia' },
                 { name: 'FICA 2026', segment: 'Gastronomia', type: 'Evento', date: 'Maio 2026', location: 'N/A' },
@@ -303,37 +302,37 @@
                 { name: 'Cozinha Show FIC', segment: 'Gastronomia', type: 'Evento', date: 'Outubro 2026', location: 'Goiânia' },
                 { name: 'Circuito Gastronômico da Cidade de Goiás', segment: 'Gastronomia', type: 'Evento', date: 'Novembro 2026', location: 'N/A' },
                 { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Março 2026', location: 'Goiânia' },
-                { name: 'Agrotech', segment: 'Gestão', type: 'Curso Premium', date: 'Abril 2026', location: 'Rio Verde' },
-                { name: 'I.A. para Gestão da Educação', segment: 'Gestão', type: 'Curso Premium', date: 'Maio 2026', location: 'Goiânia' },
-                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Junho 2026', location: 'Rio Verde' },
+                { name: 'Agrotech', segment: 'Gestão', type: 'Curso Premium', date: 'Setembro 2026', location: 'Rio Verde' },
+                { name: 'I.A. para Gestão da Educação', segment: 'Gestão', type: 'Curso Premium', date: 'Novembro 2026', location: 'Goiânia' },
+                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Maio 2026', location: 'Rio Verde' },
                 { name: 'Health Tech', segment: 'Gestão', type: 'Curso Premium', date: 'Agosto 2026', location: 'Goiânia' },
-                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Setembro 2026', location: 'Anápolis' },
-                { name: 'Gestão de Projetos PMI', segment: 'Gestão', type: 'Curso Premium', date: 'Outubro 2026', location: 'Rio Verde' },
-                { name: 'Criação de Produtos Digitais e Escale em Vendas', segment: 'Gestão', type: 'Curso Premium', date: 'Novembro 2026', location: 'Goiânia' },
+                { name: 'Criação de Agentes de I.A', segment: 'Gestão', type: 'Curso Premium', date: 'Abril 2026', location: 'Anápolis' },
+                { name: 'Gestão de Projetos PMI', segment: 'Gestão', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Cora Coralina' },
+                { name: 'Criação de Produtos Digitais e Escale em Vendas', segment: 'Gestão', type: 'Curso Premium', date: 'Junho 2026', location: 'Goiânia' },
                 { name: 'Superagos', segment: 'Gestão', type: 'Evento', date: 'Setembro 2026', location: 'Centro de Convenções de Goiânia' },
                 { name: 'FIC', segment: 'Gestão', type: 'Evento', date: 'Outubro 2026', location: 'Centro de Convenções de Goiânia' },
-                { name: 'Consultor de Beleza Personalizada', segment: 'Beleza', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
-                { name: 'Tricolab 5.0 - Ciência e Tecnologia em Saúde Capilar', segment: 'Beleza', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Elias' },
+                { name: 'Consultor de Beleza Personalizada', segment: 'Beleza', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Elias' },
+                { name: 'Tricolab 5.0 - Ciência e Tecnologia', segment: 'Beleza', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Elias' },
                 { name: 'Maquiagem para Fotografia e Vídeo', segment: 'Beleza', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
-                { name: 'Técnicas Avançadas de Maquiagem: Cut Crease, Smokey Eye e Contorno', segment: 'Beleza', type: 'Curso Premium', date: 'Novembro 2026', location: 'CEP Elias' },
-                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Maio 2026', location: 'CEP Elias / CEP Aparecida' },
+                { name: 'Técnicas Avançadas de Maquiagem', segment: 'Beleza', type: 'Curso Premium', date: 'Novembro 2026', location: 'CEP Elias' },
                 { name: 'Fegobel', segment: 'Beleza', type: 'Evento', date: 'Junho 2026', location: 'Centro de Convenções de Goiânia' },
-                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2026', location: 'CEP Anápolis' },
-                { name: 'Técnicas de Upcycling para uma Moda Sustentável', segment: 'Moda', type: 'Curso Premium', date: 'Abril 2026', location: 'CEP Elias' },
+                { name: 'SENAC Beauty', segment: 'Beleza', type: 'Evento', date: 'Agosto 2026', location: 'CEP Elias Bufáiçal' },
+                { name: 'Técnicas de Upcycling para uma Moda Sustentável', segment: 'Moda', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Varejo de Moda 5.0 - Social Commerce', segment: 'Moda', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Elias' },
                 { name: 'Técnicas de Artesanato para Criação de Moda', segment: 'Moda', type: 'Curso Premium', date: 'Junho 2026', location: 'CEP Elias' },
-                { name: 'Consultoria de Imagem no Varejo de Moda com Agente de IA', segment: 'Moda', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
-                { name: 'Moda 5.0 - Social Commerce', segment: 'Moda', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
-                { name: 'Senac Fashion School', segment: 'Moda', type: 'Evento', date: 'Setembro 2026', location: 'CEP Elias' },
-                { name: 'Neuronutrição - Cérebro, Tecnologia e Comportamento Alimentar', segment: 'Saúde', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
+                { name: 'Consultoria de Imagem com Agente de IA', segment: 'Moda', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
+                { name: 'Negócios de Brechó: Da Curadoria ao VM', segment: 'Moda', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
+                { name: 'Senac Fashion School', segment: 'Moda', type: 'Evento', date: 'Novembro 2026', location: 'CEP Elias' },
+                { name: 'Neuronutrição', segment: 'Saúde', type: 'Curso Premium', date: 'Março 2026', location: 'CEP Elias' },
                 { name: 'Taping - Dor e Movimento', segment: 'Saúde', type: 'Curso Premium', date: 'Maio 2026', location: 'CEP Elias' },
-                { name: 'Aleitamento Materno: Para Mães e Profissionais', segment: 'Saúde', type: 'Curso Premium', date: 'Agosto 2026', location: 'CEP Elias' },
-                { name: 'Furo Humanizado: Técnica, Ética e Cuidado', segment: 'Saúde', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
+                { name: 'Aleitamento Materno', segment: 'Saúde', type: 'Curso Premium', date: 'Setembro 2026', location: 'CEP Elias' },
+                { name: 'Furo Humanizado', segment: 'Saúde', type: 'Curso Premium', date: 'Outubro 2026', location: 'CEP Elias' },
             ];
             
             const allData = [...data2025, ...data2026];
 
             const monthMap = { 'janeiro': 0, 'fevereiro': 1, 'março': 2, 'abril': 3, 'maio': 4, 'junho': 5, 'julho': 6, 'agosto': 7, 'setembro': 8, 'outubro': 9, 'novembro': 10, 'dezembro': 11 };
-            const currentMonth = 10; // November is month 10 (0-indexed)
+            const currentMonth = 11; // December is month 11 (0-indexed)
 
             data2025.forEach(item => {
                 const datePart = item.date.toLowerCase().split(' ')[0];
@@ -341,7 +340,7 @@
                 if (item.date.includes('Semestre')) {
                     itemMonth = 5; // June
                 }
-                item.status = (itemMonth <= currentMonth && item.date.includes('2025')) ? 'Realizado' : 'Previsto';
+                item.status = (itemMonth <= currentMonth) ? 'Realizado' : 'Previsto';
             });
             
             const allSegments = [...new Set(allData.map(item => item.segment))];
